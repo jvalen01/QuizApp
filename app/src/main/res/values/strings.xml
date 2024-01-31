@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">QuizApp</string>
+    <string name="gallery_button_label">Gallery</string>
+    <string name="quiz_button_label">Quiz</string>
+    <string name="add_new_entry">Add New Entry</string>
+    <string name="sort_entries">Sort Entries</string>
+    <string name="image_description">Image Description</string>
+    <string name="sample_name">Sample Name</string>
+
+</resources>
