@@ -25,6 +25,10 @@ public class Person {
     public void setImageResId(int imageResId) {
         this.imageResId = imageResId;
     }
+
+    public int getImageResource() {
+        return imageResId;
+    }
 }
 
 

@@ -22,14 +22,9 @@ public class GalleryActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView_gallery);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Creating a list of Person objects
-        personList = new ArrayList<>();
-        personList.add(new Person("Erna Solberg", R.drawable.erna)); // Replace with actual image resource names
-        personList.add(new Person("Leonel Messi", R.drawable.messi)); // Replace with actual image resource names
-        personList.add(new Person("Christiano Ronaldo", R.drawable.ronaldo)); // Replace with actual image resource names
-        personList.add(new Person("Ollie Watkins", R.drawable.watkins)); // Replace with actual image resource names
-        personList.add(new Person("John McGinn", R.drawable.mcginn)); // Replace with actual image resource names
-        // Add more Person objects to the list
+        // Accessing the shared list from the Application class
+        QuizApplication quizApp = (QuizApplication) getApplicationContext();
+        personList = quizApp.getPersonList();
 
         // Initializing the adapter with the list of Person objects
         adapter = new PersonAdapter(personList);
