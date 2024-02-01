@@ -6,5 +6,7 @@
     <string name="sort_entries">Sort Entries</string>
     <string name="image_description">Image Description</string>
     <string name="sample_name">Sample Name</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="take_a_photo">Take a Photo</string>
 
 </resources>

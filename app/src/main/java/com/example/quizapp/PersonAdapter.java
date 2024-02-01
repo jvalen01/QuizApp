@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -33,12 +35,17 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Person person = personList.get(position);
         holder.textView.setText(person.getName());
-        holder.imageView.setImageResource(person.getImageResId());
+        if (person.getImageUri() != null) {
+            holder.imageView.setImageURI(person.getImageUri());
+        } else if (person.getImageResId() != 0) {
+            holder.imageView.setImageResource(person.getImageResId());
+        }
     }
+
 
     @Override
     public int getItemCount() {
