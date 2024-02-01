@@ -39,11 +39,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Person person = personList.get(position);
         holder.textView.setText(person.getName());
-        if (person.getImageUri() != null) {
-            holder.imageView.setImageURI(person.getImageUri());
-        } else if (person.getImageResId() != 0) {
-            holder.imageView.setImageResource(person.getImageResId());
-        }
+        holder.imageView.setImageResource(person.getImageResId());
     }
 
 
