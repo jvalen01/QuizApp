@@ -153,7 +153,7 @@ public class GalleryActivity extends AppCompatActivity {
     /*
         * This method is called when the activity is created.
         * It initializes the RecyclerView and the adapter with the list of people.
-        * It also sets the onClickListener for the "add image" button.
+        * It also sets the onClickListener for the "add image" button and sort button.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
