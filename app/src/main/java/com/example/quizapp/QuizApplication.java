@@ -20,8 +20,6 @@ public class QuizApplication extends Application {
         personList.add(new Person("Erna Solberg", R.drawable.erna));
         personList.add(new Person("Leonel Messi", R.drawable.messi));
         personList.add(new Person("Christiano Ronaldo", R.drawable.ronaldo));
-        personList.add(new Person("Ollie Watkins", R.drawable.watkins));
-        personList.add(new Person("John McGinn", R.drawable.mcginn));
 
     }
 

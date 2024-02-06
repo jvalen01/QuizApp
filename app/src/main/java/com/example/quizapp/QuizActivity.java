@@ -49,7 +49,7 @@ public class QuizActivity extends AppCompatActivity {
         currentPerson = personList.get(0);
 
         // Set the image of the current person
-        personImageView.setImageResource(currentPerson.getImageResource());
+        personImageView.setImageResource(currentPerson.getImageResId());
 
         // Create a list of indices excluding the index of the correct answer
         List<Integer> indices = new ArrayList<>();
