@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,10 +24,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 
+/*
+ * This class is the GalleryActivity of the app.
+ * It displays a list of people and their images in a RecyclerView.
+ */
 public class GalleryActivity extends AppCompatActivity {
     // Variable to keep track of the sort order
     private boolean sortAscending = true;
-
     private RecyclerView recyclerView;
     private PersonAdapter adapter;
     private List<Person> personList;
@@ -50,6 +54,11 @@ public class GalleryActivity extends AppCompatActivity {
                     }
                 }
             });
+
+    /* This method prompts the user to enter a name for the image and adds the image to the list of people.
+     * It creates a new Person object with the name and Uri and adds it to the list.
+     * It also notifies the adapter that the data has changed.
+     */
     private void promptForName(Uri imageUri) {
         AlertDialog.Builder builder = new AlertDialog.Builder(GalleryActivity.this);
         builder.setTitle("Enter Name for the Image");
@@ -93,6 +102,9 @@ public class GalleryActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /* This method shows a dialog to confirm the removal of an image from the list.
+     * It removes the item from the list and notifies the adapter of the item removal.
+     */
     public void showRemovalDialog(final int position) {
         new AlertDialog.Builder(this)
                 .setTitle("Remove Image")
@@ -110,7 +122,10 @@ public class GalleryActivity extends AppCompatActivity {
                 .setNegativeButton("No", null)
                 .show();
     }
-    // Method to sort the list in alphabetical order
+    /*
+        * This method sorts the list of people alphabetically in ascending or descending order.
+     */
+    @SuppressLint("NotifyDataSetChanged")
     private void sortListAlphabetically(boolean ascending) {
         if (ascending) {
             // Sort in alphabetical order
@@ -135,6 +150,11 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
 
+    /*
+        * This method is called when the activity is created.
+        * It initializes the RecyclerView and the adapter with the list of people.
+        * It also sets the onClickListener for the "add image" button.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

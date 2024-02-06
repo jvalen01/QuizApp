@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+/*
+    * This class is the adapter for the RecyclerView in the GalleryActivity.
+    * It takes a list of Person objects and creates a ViewHolder for each item in the list.
+ */
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder> {
     private final List<Person> personList;
-    private static Context context; // Add this line
-
+    @SuppressLint("StaticFieldLeak")
+    private static Context context;
 
     public PersonAdapter(List<Person> personList, Context context) {
         this.personList = personList;
-        this.context = context; // Assign the context here
+        PersonAdapter.context = context;
     }
 
+    /*
+        * This class is the ViewHolder for the RecyclerView.
+        * It holds the views for each item in the list and sets the data to the views.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textView;
@@ -41,12 +50,19 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
         }
     }
 
+    /*
+        * This method creates a new ViewHolder for the RecyclerView.
+     */
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_person, parent, false);
         return new ViewHolder(view);
     }
 
+    /*
+        * This method sets the data to the views in each ViewHolder.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Person person = personList.get(position);
@@ -64,6 +80,9 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
         }
     }
 
+    /*
+        * This method returns the number of items in the list.
+     */
     @Override
     public int getItemCount() {
         return personList.size();

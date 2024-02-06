@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
-
+/*
+ * This class is the main activity of the app.
+ * It displays the main screen with two buttons to navigate to the GalleryActivity and the QuizActivity.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
