@@ -2,18 +2,21 @@ package com.example.quizapp;
 
 import android.net.Uri;
 
+/*
+ * This class represents a person in the quiz and in the gallery.
+ */
 public class Person {
     private String name;
-    private int imageResId = -1; // Resource ID for the drawable
-    private Uri imageUri; // URI for the image
+    private int imageResId = -1;
+    private Uri imageUri;
 
-    // Constructor for resource ID
+
     public Person(String name, int imageResId) {
         this.name = name;
         this.imageResId = imageResId;
     }
 
-    // Constructor for URI
+
     public Person(String name, Uri imageUri) {
         this.name = name;
         this.imageUri = imageUri;

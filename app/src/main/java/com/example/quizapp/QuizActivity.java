@@ -15,9 +15,11 @@ import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
 
+    // Declare the variables used in the quiz activity
     private List<Person> personList;
     private Person currentPerson;
     private TextView scoreTextView;
+
     private ImageView personImageView;
     private Button buttonOption1, buttonOption2, buttonOption3;
     private int score = 0;
@@ -28,7 +30,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        // Initialize the views
+        // Initialize all the views used in the quiz activity
         scoreTextView = findViewById(R.id.score_text_view);
         personImageView = findViewById(R.id.person_image_view);
         buttonOption1 = findViewById(R.id.button_option_1);
@@ -42,6 +44,10 @@ public class QuizActivity extends AppCompatActivity {
         setupNextQuestion();
     }
 
+    /* This method sets up the next question in the quiz by shuffling the list of people and picking the first person as the current question.
+        It also sets the image of the current person and creates a list of indices excluding the index of the correct answer.
+        It then sets the correct name on a random button and the incorrect names on the other buttons.
+    */
     private void setupNextQuestion() {
 
         // Shuffle the list and pick the first Person as the current question
@@ -62,18 +68,23 @@ public class QuizActivity extends AppCompatActivity {
         List<Button> buttons = new ArrayList<>(Arrays.asList(buttonOption1, buttonOption2, buttonOption3));
         Collections.shuffle(buttons);
 
-        Button correctButton = buttons.remove(0); // Remove the button to avoid adding the name again
+        Button correctButton = buttons.remove(0); // Remove the button to avoid adding the same name to multiple buttons
         correctButton.setText(currentPerson.getName());
         correctButton.setOnClickListener(view -> handleAnswer(true));
 
         // Set incorrect names on the other buttons
         for (Button wrongButton : buttons) {
-            Person wrongPerson = personList.get(indices.remove(0)); // Removing the index to avoid duplicate names
+            Person wrongPerson = personList.get(indices.remove(0)); // Removing the index avoid adding the same name to multiple buttons
             wrongButton.setText(wrongPerson.getName());
             wrongButton.setOnClickListener(view -> handleAnswer(false));
         }
     }
 
+    /*
+        This method handles the answer given by the user. If the answer is correct, the score is incremented and a toast message is shown.
+        If the answer is incorrect, a toast message is shown with the correct answer.
+        The score is updated and the next question is set up.
+     */
     private void handleAnswer(boolean isCorrect) {
         if (isCorrect) {
             score++;

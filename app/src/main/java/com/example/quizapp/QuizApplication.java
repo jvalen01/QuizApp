@@ -5,6 +5,9 @@ import android.app.Application;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+   * This class is used to store the list of people that will be used in the quiz and in the gallery.
+ */
 public class QuizApplication extends Application {
 
     private List<Person> personList;
@@ -18,13 +21,17 @@ public class QuizApplication extends Application {
     private void initializePersonList() {
         personList = new ArrayList<>();
         personList.add(new Person("Erna Solberg", R.drawable.erna));
-        personList.add(new Person("Leonel Messi", R.drawable.messi));
-        personList.add(new Person("Christiano Ronaldo", R.drawable.ronaldo));
+        personList.add(new Person("Lionel Messi", R.drawable.messi));
+        personList.add(new Person("Cristiano Ronaldo", R.drawable.ronaldo));
 
     }
 
     public List<Person> getPersonList() {
         return personList;
+    }
+
+    public void addPerson(Person person) {
+        personList.add(person);
     }
 
 }
