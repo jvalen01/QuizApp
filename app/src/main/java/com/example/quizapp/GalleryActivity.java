@@ -31,7 +31,7 @@ public class GalleryActivity extends AppCompatActivity {
     private PersonAdapter adapter;
     private List<Person> personList;
 
-    // Define an ActivityResultLauncher for the ACTION_GET_CONTENT intent
+    // ActivityResultLauncher for the ACTION_GET_CONTENT intent
     private ActivityResultLauncher<String> mGetContent = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             new ActivityResultCallback<Uri>() {
@@ -39,6 +39,13 @@ public class GalleryActivity extends AppCompatActivity {
                 public void onActivityResult(Uri uri) {
                     // Handle the returned Uri
                     if (uri != null) {
+                        // Take persistable URI permission
+                        try {
+                            getContentResolver().takePersistableUriPermission(uri,
+                                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        }
                         promptForName(uri);
                     }
                 }
@@ -70,7 +77,7 @@ public class GalleryActivity extends AppCompatActivity {
                     // Notify the adapter that the data has changed
                     adapter.notifyItemInserted(personList.size() - 1);
                 } else {
-                    // Show a toast message and re-prompt the dialog
+                    //If empty: Show a toast message and re-prompt the dialog
                     Toast.makeText(GalleryActivity.this, "Name cannot be empty. Please enter a name.", Toast.LENGTH_LONG).show();
                     promptForName(imageUri); // Re-prompt for name
                 }
@@ -80,7 +87,6 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                // Handle the cancel case if necessary
             }
         });
 
@@ -142,11 +148,10 @@ public class GalleryActivity extends AppCompatActivity {
         QuizApplication quizApp = (QuizApplication) getApplicationContext();
         personList = quizApp.getPersonList();
 
-        // Initializing the adapter with the list of Person objects
         adapter = new PersonAdapter(personList, this);
         recyclerView.setAdapter(adapter);
 
-        // Initialize the "add image" button and set its onClickListener
+        // Add image functionality:
         Button buttonAddImage = findViewById(R.id.button_add);
         buttonAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +161,7 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
+        // Sorting functionality:
         Button buttonSort = findViewById(R.id.button_sort);
         buttonSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +173,7 @@ public class GalleryActivity extends AppCompatActivity {
                 sortAscending = !sortAscending;
 
                 // Update the button text according to the sort order
-                buttonSort.setText(sortAscending ? "Sort Z-A" : "Sort A-Z");
+                buttonSort.setText(sortAscending ? "Sort A-Z" : "Sort Z-A");
             }
         });
 

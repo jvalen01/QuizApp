@@ -48,8 +48,19 @@ public class QuizActivity extends AppCompatActivity {
         Collections.shuffle(personList);
         currentPerson = personList.get(0);
 
-        // Set the image of the current person
-        personImageView.setImageResource(currentPerson.getImageResId());
+        // Check if currentPerson has an image URI or a resource ID, and load the image accordingly
+        if (currentPerson.hasImageUri()) {
+            personImageView.setImageURI(currentPerson.getImageUri());
+        } else if (currentPerson.hasImageResId()) {
+            personImageView.setImageResource(currentPerson.getImageResId());
+        } else {
+            // Handle the case where there's no image
+            personImageView.setImageResource(R.drawable.default_image); // Replace with your default image
+        }
+
+
+
+
 
         // Create a list of indices excluding the index of the correct answer
         List<Integer> indices = new ArrayList<>();
