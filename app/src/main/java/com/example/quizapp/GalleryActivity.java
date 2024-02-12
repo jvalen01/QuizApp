@@ -1,12 +1,10 @@
 package com.example.quizapp;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,14 +13,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 
 /*
  * This class is the GalleryActivity of the app.
@@ -31,27 +25,23 @@ import androidx.activity.result.ActivityResultCallback;
 public class GalleryActivity extends AppCompatActivity {
     // Variable to keep track of the sort order
     private boolean sortAscending = true;
-    private RecyclerView recyclerView;
     private PersonAdapter adapter;
     private List<Person> personList;
 
     // ActivityResultLauncher for the ACTION_GET_CONTENT intent
-    private ActivityResultLauncher<String> mGetContent = registerForActivityResult(
+    private final ActivityResultLauncher<String> mGetContent = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
-                    if (uri != null) {
-                        // Take persistable URI permission
-                        try {
-                            getContentResolver().takePersistableUriPermission(uri,
-                                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        } catch (SecurityException e) {
-                            e.printStackTrace();
-                        }
-                        promptForName(uri);
+            uri -> {
+                // Handle the returned Uri
+                if (uri != null) {
+                    // Take persistable URI permission
+                    try {
+                        getContentResolver().takePersistableUriPermission(uri,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
                     }
+                    promptForName(uri);
                 }
             });
 
@@ -70,34 +60,26 @@ public class GalleryActivity extends AppCompatActivity {
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String personName = input.getText().toString().trim();
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String personName = input.getText().toString().trim();
 
-                // Validate the entered name
-                if (!personName.isEmpty()) {
-                    // Create a new Person object with the name and Uri
-                    Person newPerson = new Person(personName, imageUri);
+            // Validate the entered name
+            if (!personName.isEmpty()) {
+                // Create a new Person object with the name and Uri
+                Person newPerson = new Person(personName, imageUri);
 
-                    // Add the new Person to the list
-                    personList.add(newPerson);
+                // Add the new Person to the list
+                personList.add(newPerson);
 
-                    // Notify the adapter that the data has changed
-                    adapter.notifyItemInserted(personList.size() - 1);
-                } else {
-                    //If empty: Show a toast message and re-prompt the dialog
-                    Toast.makeText(GalleryActivity.this, "Name cannot be empty. Please enter a name.", Toast.LENGTH_LONG).show();
-                    promptForName(imageUri); // Re-prompt for name
-                }
+                // Notify the adapter that the data has changed
+                adapter.notifyItemInserted(personList.size() - 1);
+            } else {
+                //If empty: Show a toast message and re-prompt the dialog
+                Toast.makeText(GalleryActivity.this, "Name cannot be empty. Please enter a name.", Toast.LENGTH_LONG).show();
+                promptForName(imageUri); // Re-prompt for name
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -109,15 +91,12 @@ public class GalleryActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Remove Image")
                 .setMessage("Are you sure you want to remove this image?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Remove the item from the list
-                        personList.remove(position);
-                        // Notify the adapter of the item removal
-                        adapter.notifyItemRemoved(position);
-                        adapter.notifyItemRangeChanged(position, personList.size());
-                    }
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Remove the item from the list
+                    personList.remove(position);
+                    // Notify the adapter of the item removal
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeChanged(position, personList.size());
                 })
                 .setNegativeButton("No", null)
                 .show();
@@ -129,20 +108,10 @@ public class GalleryActivity extends AppCompatActivity {
     private void sortListAlphabetically(boolean ascending) {
         if (ascending) {
             // Sort in alphabetical order
-            Collections.sort(personList, new Comparator<Person>() {
-                @Override
-                public int compare(Person p1, Person p2) {
-                    return p1.getName().compareTo(p2.getName());
-                }
-            });
+            personList.sort(Comparator.comparing(Person::getName));
         } else {
             // Sort in reverse alphabetical order
-            Collections.sort(personList, new Comparator<Person>() {
-                @Override
-                public int compare(Person p1, Person p2) {
-                    return p2.getName().compareTo(p1.getName());
-                }
-            });
+            personList.sort((p1, p2) -> p2.getName().compareTo(p1.getName()));
         }
 
         // Notify the adapter of the change in the dataset
@@ -161,7 +130,7 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         // Initializing the RecyclerView
-        recyclerView = findViewById(R.id.recyclerView_gallery);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_gallery);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Accessing the shared list from the Application class
@@ -173,28 +142,22 @@ public class GalleryActivity extends AppCompatActivity {
 
         // Add image functionality:
         Button buttonAddImage = findViewById(R.id.button_add);
-        buttonAddImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Launch the ACTION_GET_CONTENT intent to select an image
-                mGetContent.launch("image/*");
-            }
+        buttonAddImage.setOnClickListener(v -> {
+            // Launch the ACTION_GET_CONTENT intent to select an image
+            mGetContent.launch("image/*");
         });
 
         // Sorting functionality:
         Button buttonSort = findViewById(R.id.button_sort);
-        buttonSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Sort the list with the current order
-                sortListAlphabetically(sortAscending);
+        buttonSort.setOnClickListener(v -> {
+            // Sort the list with the current order
+            sortListAlphabetically(sortAscending);
 
-                // Toggle the sort order for the next click
-                sortAscending = !sortAscending;
+            // Toggle the sort order for the next click
+            sortAscending = !sortAscending;
 
-                // Update the button text according to the sort order
-                buttonSort.setText(sortAscending ? "Sort A-Z" : "Sort Z-A");
-            }
+            // Update the button text according to the sort order
+            buttonSort.setText(sortAscending ? "Sort A-Z" : "Sort Z-A");
         });
 
     }

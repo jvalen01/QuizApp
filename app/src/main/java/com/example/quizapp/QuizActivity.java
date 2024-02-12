@@ -2,6 +2,7 @@ package com.example.quizapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,6 +48,7 @@ public class QuizActivity extends AppCompatActivity {
     /* This method sets up the next question in the quiz by shuffling the list of people and picking the first person as the current question.
         It also sets the image of the current person and creates a list of indices excluding the index of the correct answer.
         It then sets the correct name on a random button and the incorrect names on the other buttons.
+
     */
     private void setupNextQuestion() {
 
@@ -60,11 +62,9 @@ public class QuizActivity extends AppCompatActivity {
         } else if (currentPerson.hasImageResId()) {
             personImageView.setImageResource(currentPerson.getImageResId());
         } else {
-            // Handle the case where there's no image
-            personImageView.setImageResource(R.drawable.default_image); // Replace with your default image
+
+            personImageView.setImageResource(R.drawable.default_image);
         }
-
-
 
 
 
@@ -108,6 +108,7 @@ public class QuizActivity extends AppCompatActivity {
         setupNextQuestion();
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateScore() {
         scoreTextView.setText("Score: " + score + "/" + attempts);
     }
