@@ -1,26 +1,36 @@
 package com.example.quizapp;
 
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import android.net.Uri;
 
-/*
- * This class represents a person in the quiz and in the gallery.
- */
+@Entity(tableName = "people")
 public class Person {
-    private String name;
-    private int imageResId = -1;
-    private Uri imageUri;
+    @PrimaryKey(autoGenerate = true)
+    public int id;
 
+    @ColumnInfo(name = "name")
+    private String name;
+
+    @ColumnInfo(name = "imageResId")
+    private int imageResId = -1;
+
+    @ColumnInfo(name = "imageUri")
+    private String imageUriString;
 
     public Person(String name, int imageResId) {
         this.name = name;
         this.imageResId = imageResId;
     }
 
-
     public Person(String name, Uri imageUri) {
         this.name = name;
-        this.imageUri = imageUri;
+        this.setImageUri(imageUri);
     }
+
+    // Getters and setters
 
     public String getName() {
         return name;
@@ -29,9 +39,21 @@ public class Person {
     public int getImageResId() {
         return imageResId;
     }
-
     public Uri getImageUri() {
-        return imageUri;
+        return imageUriString == null ? null : Uri.parse(imageUriString);
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUriString = (imageUri == null) ? null : imageUri.toString();
+    }
+    // Correct getter for imageUriString
+    public String getImageUriString() {
+        return imageUriString;
+    }
+
+    // Correct setter for imageUriString
+    public void setImageUriString(String imageUriString) {
+        this.imageUriString = imageUriString;
     }
 
     public void setName(String name) {
@@ -42,12 +64,9 @@ public class Person {
         this.imageResId = imageResId;
     }
 
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
-    }
 
     public boolean hasImageUri() {
-        return imageUri != null;
+        return imageUriString != null;
     }
 
     public boolean hasImageResId() {

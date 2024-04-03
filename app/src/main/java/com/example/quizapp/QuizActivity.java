@@ -1,13 +1,12 @@
 package com.example.quizapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,15 +14,13 @@ import java.util.List;
 
 public class QuizActivity extends AppCompatActivity {
 
-    // Declare the variables used in the quiz activity
-    private List<Person> personList;
-    private Person currentPerson;
-    private TextView scoreTextView;
+    private QuizViewModel quizViewModel;
 
     private ImageView personImageView;
     private Button buttonOption1, buttonOption2, buttonOption3;
-    private int score = 0;
-    private int attempts = 0;
+    private TextView scoreTextView;
+    private List<Person> personList = new ArrayList<>();
+    private Person currentPerson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,79 +34,81 @@ public class QuizActivity extends AppCompatActivity {
         buttonOption2 = findViewById(R.id.button_option_2);
         buttonOption3 = findViewById(R.id.button_option_3);
 
-        // Get the Person list from the Application class
-        QuizApplication quizApp = (QuizApplication) getApplicationContext();
-        personList = new ArrayList<>(quizApp.getPersonList());
+        // Initialize QuizViewModel
+        quizViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
 
-        setupNextQuestion();
+        // Observe the LiveData from the ViewModel
+        observeViewModel();
+
+        // Fetch and setup the first question
+        quizViewModel.fetchPersons(); // Assuming you have this method to fetch and set the initial list in ViewModel
     }
 
-    /* This method sets up the next question in the quiz by shuffling the list of people and picking the first person as the current question.
-        It also sets the image of the current person and creates a list of indices excluding the index of the correct answer.
-        It then sets the correct name on a random button and the incorrect names on the other buttons.
-    */
-    private void setupNextQuestion() {
+    private void observeViewModel() {
+        quizViewModel.getPersonList().observe(this, persons -> {
+            personList = persons;
+            setupNextQuestion();
+        });
 
-        // Shuffle the list and pick the first Person as the current question
+        quizViewModel.getScore().observe(this, score -> updateScoreDisplay());
+        quizViewModel.getAttempts().observe(this, attempts -> updateScoreDisplay());
+    }
+
+    private void updateScoreDisplay() {
+        Integer score = quizViewModel.getScore().getValue();
+        Integer attempts = quizViewModel.getAttempts().getValue();
+        scoreTextView.setText("Score: " + (score != null ? score : 0) + "/" + (attempts != null ? attempts : 0));
+    }
+
+    private void setupNextQuestion() {
+        if (personList.isEmpty()) {
+            Toast.makeText(this, "No persons available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Collections.shuffle(personList);
         currentPerson = personList.get(0);
 
-        // Check if currentPerson has an image URI or a resource ID, and load the image accordingly
-        if (currentPerson.hasImageUri()) {
-            personImageView.setImageURI(currentPerson.getImageUri());
-        } else if (currentPerson.hasImageResId()) {
-            personImageView.setImageResource(currentPerson.getImageResId());
-        } else {
-            // Handle the case where there's no image
-            personImageView.setImageResource(R.drawable.default_image); // Replace with your default image
-        }
+        // Assuming you have a method to update the image view
+        updatePersonImage(currentPerson);
 
-
-
-
-
-        // Create a list of indices excluding the index of the correct answer
-        List<Integer> indices = new ArrayList<>();
-        for (int i = 1; i < personList.size(); i++) {
-            indices.add(i);
-        }
-        Collections.shuffle(indices);
-
-        // Set the correct name on a random button
         List<Button> buttons = new ArrayList<>(Arrays.asList(buttonOption1, buttonOption2, buttonOption3));
         Collections.shuffle(buttons);
 
-        Button correctButton = buttons.remove(0); // Remove the button to avoid adding the same name to multiple buttons
+        Button correctButton = buttons.remove(0);
         correctButton.setText(currentPerson.getName());
         correctButton.setOnClickListener(view -> handleAnswer(true));
 
-        // Set incorrect names on the other buttons
         for (Button wrongButton : buttons) {
-            Person wrongPerson = personList.get(indices.remove(0)); // Removing the index avoid adding the same name to multiple buttons
-            wrongButton.setText(wrongPerson.getName());
+            wrongButton.setText(getRandomWrongAnswer(currentPerson.getName()));
             wrongButton.setOnClickListener(view -> handleAnswer(false));
         }
     }
 
-    /*
-        This method handles the answer given by the user. If the answer is correct, the score is incremented and a toast message is shown.
-        If the answer is incorrect, a toast message is shown with the correct answer.
-        The score is updated and the next question is set up.
-     */
     private void handleAnswer(boolean isCorrect) {
+        quizViewModel.updateScore(isCorrect);
         if (isCorrect) {
-            score++;
             Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Incorrect. The correct answer is " + currentPerson.getName(), Toast.LENGTH_LONG).show();
         }
-        attempts++;
-        updateScore();
         setupNextQuestion();
     }
 
-    private void updateScore() {
-        scoreTextView.setText("Score: " + score + "/" + attempts);
+    private String getRandomWrongAnswer(String correctAnswer) {
+        String wrongAnswer;
+        do {
+            wrongAnswer = personList.get((int) (Math.random() * personList.size())).getName();
+        } while (wrongAnswer.equals(correctAnswer));
+        return wrongAnswer;
+    }
+
+    private void updatePersonImage(Person currentPerson) {
+        // Implementation depends on how you're handling images (resource ID or URI)
+        if (currentPerson.hasImageResId()) {
+            personImageView.setImageResource(currentPerson.getImageResId());
+        } else if (currentPerson.hasImageUri()) {
+            // Load image from URI, considering proper image loading libraries or handling
+        }
     }
 }
-
