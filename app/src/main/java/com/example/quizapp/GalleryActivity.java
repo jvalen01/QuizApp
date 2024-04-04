@@ -1,7 +1,6 @@
 package com.example.quizapp;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,15 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
     private boolean sortAscending = true;
-    private RecyclerView recyclerView;
     private PersonAdapter adapter;
     private QuizViewModel quizViewModel;
+    private RecyclerView recyclerView;
 
     private final ActivityResultLauncher<String> mGetContent = registerForActivityResult(
             new ActivityResultContracts.GetContent(), uri -> {
@@ -76,20 +76,20 @@ public class GalleryActivity extends AppCompatActivity {
             }
             buttonSort.setText(sortAscending ? "Sort A-Z" : "Sort Z-A");
         });
-    }/* This method shows a dialog to confirm the removal of an image from the list.
-     * It removes the item from the list and notifies the adapter of the item removal.
-     */
+    }
+
     public void showRemovalDialog(final int position) {
         new AlertDialog.Builder(this)
                 .setTitle("Remove Image")
                 .setMessage("Are you sure you want to remove this image?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    // Remove the item from the list
                     List<Person> personList = quizViewModel.getPersonList().getValue();
-                    personList.remove(position);
-                    // Notify the adapter of the item removal
-                    adapter.notifyItemRemoved(position);
-                    adapter.notifyItemRangeChanged(position, personList.size());
+                    if (personList != null) {
+                        personList.remove(position);
+                        // Notify the adapter of the item removal
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, personList.size());
+                    }
                 })
                 .setNegativeButton("No", null)
                 .show();
@@ -114,7 +114,6 @@ public class GalleryActivity extends AppCompatActivity {
                 // Add the new Person to the list through QuizViewModel
                 quizViewModel.addPerson(newPerson);
 
-
             } else {
                 Toast.makeText(this, "Name cannot be empty. Please enter a name.", Toast.LENGTH_LONG).show();
                 promptForName(imageUri); // Re-prompt for name
@@ -135,7 +134,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void updateRecyclerView(List<Person> personList) {
-        Log.d("AppDatabase", "Updating RecyclerView with person list size: " + personList.size());
+        Log.d("GalleryActivity", "Updating RecyclerView with person list size: " + personList.size());
         adapter = new PersonAdapter(personList, this);
         recyclerView.setAdapter(adapter);
     }

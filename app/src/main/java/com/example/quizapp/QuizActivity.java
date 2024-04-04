@@ -102,6 +102,7 @@ public class QuizActivity extends AppCompatActivity {
         } while (wrongAnswer.equals(correctAnswer));
         return wrongAnswer;
     }
+
     private void updatePersonImage(Person currentPerson) {
         if (currentPerson.hasImageResId()) {
             personImageView.setImageResource(currentPerson.getImageResId());
