@@ -1,6 +1,7 @@
 package com.example.quizapp;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -27,8 +28,10 @@ public class QuizViewModel extends AndroidViewModel {
     }
 
     private void loadPersons() {
+        Log.d("AppDatabase", "Loading persons from database...");
         new Thread(() -> {
             List<Person> persons = db.personDao().getAll();
+            Log.d("AppDatabase", "Persons loaded: " + persons.size());
             personList.postValue(persons);
         }).start();
     }
@@ -68,8 +71,10 @@ public class QuizViewModel extends AndroidViewModel {
     }
 
     public void addPerson(Person person) {
+        Log.d("AppDatabase", "Adding person: " + person.getName());
         new Thread(() -> {
             db.personDao().insert(person);
+            Log.d("AppDatabase", "Person added: " + person.getName());
             loadPersons();
         }).start();
     }

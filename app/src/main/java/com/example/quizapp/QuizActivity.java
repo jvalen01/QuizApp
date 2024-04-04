@@ -102,13 +102,16 @@ public class QuizActivity extends AppCompatActivity {
         } while (wrongAnswer.equals(correctAnswer));
         return wrongAnswer;
     }
-
     private void updatePersonImage(Person currentPerson) {
-        // Implementation depends on how you're handling images (resource ID or URI)
         if (currentPerson.hasImageResId()) {
             personImageView.setImageResource(currentPerson.getImageResId());
         } else if (currentPerson.hasImageUri()) {
-            // Load image from URI, considering proper image loading libraries or handling
+            // Load image from URI using Android's ContentResolver and ImageView's setImageURI
+            personImageView.setImageURI(currentPerson.getImageUri());
+            // Note: For large images or for better performance and caching, consider using an image loading library like Glide or Picasso.
+        } else {
+            // Fallback image in case there's no image available
+            personImageView.setImageResource(R.drawable.default_image); // Replace with your actual default image resource
         }
     }
 }

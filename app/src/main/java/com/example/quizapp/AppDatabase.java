@@ -29,14 +29,18 @@ public abstract class AppDatabase extends RoomDatabase {
     private static void initializeData(AppDatabase database) {
         Executors.newSingleThreadExecutor().execute(() -> {
             PersonDao personDao = database.personDao();
-            Uri uriErna = Uri.parse("android.resource://" + "com.example.quizapp" + "/" + R.drawable.erna);
-            Uri uriMessi = Uri.parse("android.resource://" + "com.example.quizapp" + "/" + R.drawable.messi);
-            Uri uriRonaldo = Uri.parse("android.resource://" + "com.example.quizapp" + "/" + R.drawable.ronaldo);
+            if (personDao.getCount() == 0) {
+                Uri uriErna = Uri.parse("android.resource://" + "com.example.quizapp" + "/" + R.drawable.erna);
+                Uri uriMessi = Uri.parse("android.resource://" + "com.example.quizapp" + "/" + R.drawable.messi);
+                Uri uriRonaldo = Uri.parse("android.resource://" + "com.example.quizapp" + "/" + R.drawable.ronaldo);
 
-            personDao.insert(new Person("Erna Solberg", uriErna));
-            personDao.insert(new Person("Lionel Messi", uriMessi));
-            personDao.insert(new Person("Cristiano Ronaldo", uriRonaldo));
+                personDao.insert(new Person("Erna Solberg", uriErna));
+                personDao.insert(new Person("Lionel Messi", uriMessi));
+                personDao.insert(new Person("Cristiano Ronaldo", uriRonaldo));
 
+                Log.d("AppDatabase", "Data initialization complete.");
+
+            }
             // Add more initial persons as needed
         });
     }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import android.util.Log;
 
 /*
  * This class is the adapter for the RecyclerView in the GalleryActivity.
@@ -66,6 +67,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Person person = personList.get(position);
+        Log.d("AppDatabase", "Binding view for person: " + person.getName());
         holder.textView.setText(person.getName());
 
         if (person.hasImageUri()) {
