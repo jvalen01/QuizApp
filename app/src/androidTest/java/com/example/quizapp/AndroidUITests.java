@@ -35,7 +35,7 @@ public class AndroidUITests {
         onView(withId(R.id.score_text_view)).check(matches(isDisplayed()));
 
         // check if the text view with the text "Score: 0" is displayed
-        onView(withId(R.id.score_text_view)).check(matches(withText("Score: 0")));
+        onView(withId(R.id.score_text_view)).check(matches(withText("Score: 0/0")));
 
         }
 
