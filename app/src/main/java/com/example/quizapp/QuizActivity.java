@@ -78,11 +78,16 @@ public class QuizActivity extends AppCompatActivity {
         Button correctButton = buttons.remove(0);
         correctButton.setText(currentPerson.getName());
         correctButton.setOnClickListener(view -> handleAnswer(true));
+        correctButton.setTag("correct");
 
+        int wrongButtonIndex = 1; // index to differentiate the wrong buttons
         for (Button wrongButton : buttons) {
             wrongButton.setText(getRandomWrongAnswer(currentPerson.getName()));
             wrongButton.setOnClickListener(view -> handleAnswer(false));
+            wrongButton.setTag("wrong" + wrongButtonIndex);
+            wrongButtonIndex++;
         }
+
     }
 
     private void handleAnswer(boolean isCorrect) {
