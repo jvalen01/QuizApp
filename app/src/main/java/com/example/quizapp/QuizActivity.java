@@ -68,8 +68,6 @@ public class QuizActivity extends AppCompatActivity {
 
         Collections.shuffle(personList);
         currentPerson = personList.get(0);
-
-        // Assuming you have a method to update the image view
         updatePersonImage(currentPerson);
 
         List<Button> buttons = new ArrayList<>(Arrays.asList(buttonOption1, buttonOption2, buttonOption3));
@@ -80,14 +78,18 @@ public class QuizActivity extends AppCompatActivity {
         correctButton.setOnClickListener(view -> handleAnswer(true));
         correctButton.setTag("correct");
 
+        List<String> chosenNames = new ArrayList<>();
+        chosenNames.add(currentPerson.getName()); // Add correct answer to prevent duplication
+
         int wrongButtonIndex = 1; // index to differentiate the wrong buttons
         for (Button wrongButton : buttons) {
-            wrongButton.setText(getRandomWrongAnswer(currentPerson.getName()));
+            String wrongAnswer = getRandomWrongAnswer(currentPerson.getName(), chosenNames);
+            wrongButton.setText(wrongAnswer);
+            chosenNames.add(wrongAnswer); // Add chosen wrong answer to prevent duplication
             wrongButton.setOnClickListener(view -> handleAnswer(false));
             wrongButton.setTag("wrong" + wrongButtonIndex);
             wrongButtonIndex++;
         }
-
     }
 
     private void handleAnswer(boolean isCorrect) {
@@ -100,11 +102,11 @@ public class QuizActivity extends AppCompatActivity {
         setupNextQuestion();
     }
 
-    private String getRandomWrongAnswer(String correctAnswer) {
+    private String getRandomWrongAnswer(String correctAnswer, List<String> chosenNames) {
         String wrongAnswer;
         do {
             wrongAnswer = personList.get((int) (Math.random() * personList.size())).getName();
-        } while (wrongAnswer.equals(correctAnswer));
+        } while (wrongAnswer.equals(correctAnswer) || chosenNames.contains(wrongAnswer));
         return wrongAnswer;
     }
 

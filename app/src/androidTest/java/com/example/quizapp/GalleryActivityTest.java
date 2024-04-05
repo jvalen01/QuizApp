@@ -61,7 +61,7 @@ public class GalleryActivityTest {
     @Test
     public void testAddingAndDeletingPersonUpdatesCount() {
 
-        // Finf the initial count of items in the RecyclerView
+        //The initial count of items in the RecyclerView
         final int[] initialCount = new int[1];
         activityRule.getScenario().onActivity(activity -> {
             RecyclerView recyclerView = activity.findViewById(R.id.recyclerView_gallery);
