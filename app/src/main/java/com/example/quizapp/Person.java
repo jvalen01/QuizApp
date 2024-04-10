@@ -60,11 +60,6 @@ public class Person {
         this.name = name;
     }
 
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
-    }
-
-
     public boolean hasImageUri() {
         return imageUriString != null;
     }

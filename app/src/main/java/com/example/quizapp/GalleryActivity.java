@@ -60,6 +60,7 @@ public class GalleryActivity extends AppCompatActivity {
         setupButtons();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void setupButtons() {
         // Button to add image
         Button buttonAddImage = findViewById(R.id.button_add);

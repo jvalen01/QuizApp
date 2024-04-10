@@ -41,7 +41,7 @@ public class QuizActivity extends AppCompatActivity {
         observeViewModel();
 
         // Fetch and setup the first question
-        quizViewModel.fetchPersons(); // Assuming you have this method to fetch and set the initial list in ViewModel
+        quizViewModel.fetchPersons();
     }
 
     private void observeViewModel() {
@@ -114,12 +114,12 @@ public class QuizActivity extends AppCompatActivity {
         if (currentPerson.hasImageResId()) {
             personImageView.setImageResource(currentPerson.getImageResId());
         } else if (currentPerson.hasImageUri()) {
-            // Load image from URI using Android's ContentResolver and ImageView's setImageURI
+            // Load the image from the Uri
             personImageView.setImageURI(currentPerson.getImageUri());
-            // Note: For large images or for better performance and caching, consider using an image loading library like Glide or Picasso.
+
         } else {
-            // Fallback image in case there's no image available
-            personImageView.setImageResource(R.drawable.default_image); // Replace with your actual default image resource
+            // Set a default image if no image is available
+            personImageView.setImageResource(R.drawable.default_image);
         }
     }
 }
