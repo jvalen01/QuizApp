@@ -39,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.d("AppDatabase", "Data initialization complete.");
 
             }
-            // Add more initial persons as needed
+
         });
     }
 }

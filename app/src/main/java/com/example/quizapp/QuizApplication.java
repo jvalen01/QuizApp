@@ -14,4 +14,8 @@ public class QuizApplication extends Application {
     public static QuizApplication getInstance() {
         return instance;
     }
+
+    private void deleteDatabase() {
+        this.deleteDatabase("quiz-database"); // Delete the existing database
+    }
 }

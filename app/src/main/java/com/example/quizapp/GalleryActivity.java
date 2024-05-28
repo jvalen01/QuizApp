@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public class GalleryActivity extends AppCompatActivity {
     private boolean sortAscending = true;
@@ -86,10 +87,16 @@ public class GalleryActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", (dialog, which) -> {
                     List<Person> personList = quizViewModel.getPersonList().getValue();
                     if (personList != null) {
-                        personList.remove(position);
+                        Person personToRemove = personList.remove(position);
+
                         // Notify the adapter of the item removal
                         adapter.notifyItemRemoved(position);
                         adapter.notifyItemRangeChanged(position, personList.size());
+
+                        // Delete the person from the database
+                        Executors.newSingleThreadExecutor().execute(() -> {
+                            quizViewModel.deletePerson(personToRemove);
+                        });
                     }
                 })
                 .setNegativeButton("No", null)
